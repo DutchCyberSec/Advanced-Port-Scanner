@@ -63,12 +63,12 @@ class PortScannerGUI:
     
     def get_current_version(self):
         # You can implement your version retrieval logic here
-        return "1.3"
+        return "1.5"
 
     def check_for_updates(self):
         try:
             # Directly download the updated script from GitHub raw URL
-            raw_url = f"https://raw.githubusercontent.com/DutchCyberSec/Advanced-Port-Scanner/main/Advanced_Port_Scanner.py"
+            raw_url = "https://raw.githubusercontent.com/DutchCyberSec/Advanced-Port-Scanner/main/Advanced_Port_Scanner.py"
             response = requests.get(raw_url)
 
             if response.status_code == 200:
@@ -96,7 +96,7 @@ class PortScannerGUI:
         github_repo = 'Advanced-Port-Scanner'
 
         # GitHub API URL to get the latest release
-        api_url = f"https://raw.githubusercontent.com/DutchCyberSec/Advanced-Port-Scanner/main/Advanced_Port_Scanner.py"
+        api_url = "https://raw.githubusercontent.com/DutchCyberSec/Advanced-Port-Scanner/main/Advanced_Port_Scanner.py"
 
         try:
             response = requests.get(api_url)
