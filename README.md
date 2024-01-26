@@ -39,4 +39,4 @@ How to Run
 
     Clone the repository.
     Install dependencies (pip install -r requirements.txt).
-    Run the script: Advanced_Port_Scanner.py
+    Run the script: sudo python3 ./Advanced_Port_Scanner.py
