@@ -1,7 +1,8 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 import requests
-from threading import Thread
+import os
+import shutil
 
 class PortScannerGUI:
     def __init__(self, master):
@@ -63,7 +64,7 @@ class PortScannerGUI:
             response = requests.get(api_url)
             if response.status_code == 200:
                 latest_version = response.json()['tag_name']
-                current_version = '1.2'  # Replace with your actual current version
+                current_version = '1.3'  # Replace with your actual current version
 
                 if current_version < latest_version:
                     message = f"A new version ({latest_version}) is available. Do you want to update?"
@@ -77,6 +78,27 @@ class PortScannerGUI:
                 messagebox.showerror("Error", f"Error checking for updates: {response.status_code}")
         except Exception as e:
             messagebox.showerror("Error", f"Error checking for updates: {str(e)}")
+
+        try:
+            # Directly download the updated script from GitHub raw URL
+            raw_url = f"https://raw.githubusercontent.com/DutchCyberSec/Advanced-Port-Scanner/main/Advanced_Port_Scanner.py"
+            response = requests.get(raw_url)
+            
+            if response.status_code == 200:
+                updated_script_path = 'updated_tool.py'
+                with open(updated_script_path, 'w') as updated_script:
+                    updated_script.write(response.text)
+
+                # Replace the current script with the updated one
+                current_script_path = os.path.abspath(__file__)
+                shutil.move(updated_script_path, current_script_path)
+
+                messagebox.showinfo("Update Complete", "Script updated successfully. Restart the application.")
+            else:
+                messagebox.showerror("Error", f"Error downloading update: {response.status_code}")
+        except Exception as e:
+            messagebox.showerror("Error", f"Error updating script: {str(e)}")
+
 
     def download_new_update(self):
         # Replace 'YourGitHubUsername' and 'YourGitHubRepo' with your GitHub username and repository name
