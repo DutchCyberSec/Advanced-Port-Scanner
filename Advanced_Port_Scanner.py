@@ -63,7 +63,7 @@ class PortScannerGUI:
     
     def get_current_version(self):
         # You can implement your version retrieval logic here
-        return "1.0"
+        return "1.1"
 
     def check_for_updates(self):
         try:
