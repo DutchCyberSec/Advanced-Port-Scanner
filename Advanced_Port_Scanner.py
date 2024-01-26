@@ -3,6 +3,7 @@ from tkinter import ttk, messagebox
 import requests
 import os
 import shutil
+import zipfile
 
 class PortScannerGUI:
     def __init__(self, master):
@@ -63,19 +64,23 @@ class PortScannerGUI:
     
     def get_current_version(self):
         # You can implement your version retrieval logic here
-        return "1.8"
+        return "1.1"
 
     def check_for_updates(self):
         try:
             # Directly download the updated script from GitHub raw URL
-            raw_url = "https://raw.githubusercontent.com/DutchCyberSec/Advanced-Port-Scanner/main/Advanced_Port_Scanner.py"
+            raw_url = f"https://raw.githubusercontent.com/DutchCyberSec/Advanced-Port-Scanner/main/Advanced_Port_Scanner.py"
             response = requests.get(raw_url)
 
             if response.status_code == 200:
                 try:
-                    updated_script_path = 'Advanced_Port_Scanner.py'
+                    updated_script_path = 'Advanced_Port_Scanner_updated.py'
                     with open(updated_script_path, 'w') as updated_script:
                         updated_script.write(response.text)
+
+                    # Display the available update version
+                    available_version = self.get_remote_version()
+                    messagebox.showinfo("Update Info", f"Available Version: {available_version}")
 
                     # Replace the current script with the updated one
                     current_script_path = os.path.abspath(__file__)
@@ -91,26 +96,29 @@ class PortScannerGUI:
             messagebox.showerror("Error", f"Error updating script: {str(e)}")
 
     def download_new_update(self):
-        # Replace 'YourGitHubUsername' and 'YourGitHubRepo' with your GitHub username and repository name
-        github_username = 'DutchCyberSec'
-        github_repo = 'Advanced-Port-Scanner'
-
-        # GitHub API URL to get the latest release
-        api_url = "https://raw.githubusercontent.com/DutchCyberSec/Advanced-Port-Scanner/main/Advanced_Port_Scanner.py"
-
         try:
-            response = requests.get(api_url)
+            # Directly download the updated script from GitHub raw URL
+            raw_url = f"https://raw.githubusercontent.com/DutchCyberSec/Advanced-Port-Scanner/main/Advanced_Port_Scanner.py"
+            response = requests.get(raw_url)
+
             if response.status_code == 200:
-                updated_script_path = 'Advanced_Port_Scanner'
-                with open(updated_script_path, 'w') as updated_script:
-                    updated_script.write(response.text)
+                try:
+                    updated_script_path = 'Advanced_Port_Scanner_updated.py'
+                    with open(updated_script_path, 'w') as updated_script:
+                        updated_script.write(response.text)
 
-                # Replace the current script with the updated one
-                current_script_path = os.path.abspath(__file__)
-                shutil.move(updated_script_path, current_script_path)
+                    # Display the available update version
+                    available_version = self.get_remote_version()
+                    messagebox.showinfo("Update Info", f"Available Version: {available_version}")
 
-                messagebox.showinfo("Update Complete", "Script updated successfully. Restart the application.")
-                self.version_label.config(text=f"Version: {self.get_current_version()}")
+                    # Replace the current script with the updated one
+                    current_script_path = os.path.abspath(__file__)
+                    shutil.move(updated_script_path, current_script_path)
+
+                    messagebox.showinfo("Update Complete", "Script updated successfully. Restart the application.")
+                    self.version_label.config(text=f"Version: {self.get_current_version()}")
+                except Exception as write_error:
+                    messagebox.showerror("Error", f"Error writing updated script: {str(write_error)}")
             else:
                 messagebox.showerror("Error", f"Error downloading update: {response.status_code}")
         except Exception as e:
@@ -156,6 +164,17 @@ class PortScannerGUI:
         scanner = AdminPageScanner(target, self.result_text)
         scanner.scan_admin_pages()
 
+    def get_remote_version(self):
+        try:
+            raw_url = f"https://raw.githubusercontent.com/{self.github_username}/{self.github_repo}/main/version.txt"
+            response = requests.get(raw_url)
+            if response.status_code == 200:
+                return response.text.strip()
+        except Exception as e:
+            print(f"Error getting remote version: {str(e)}")
+        return "N/A"
+
+
 class AdminPageScanner:
     def __init__(self, target, result_text):
         self.target = target
@@ -177,6 +196,25 @@ class AdminPageScanner:
                 result = f"[+] Found Admin Page: {url}\n"
                 self.result_text.insert(tk.END, result)
                 self.result_text.yview(tk.END)
+
+
+class PortScanner:
+    def __init__(self, target, result_text):
+        self.target = target
+        self.result_text = result_text
+
+    def start_scan_tcp(self):
+        # Implement your TCP scan logic here
+        pass
+
+    def start_scan_udp(self):
+        # Implement your UDP scan logic here
+        pass
+
+    def start_scan_icmp(self):
+        # Implement your ICMP scan logic here
+        pass
+
 
 def main():
     root = tk.Tk()
