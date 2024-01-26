@@ -37,6 +37,7 @@ class PortScannerGUI:
 
         self.creator_label = ttk.Label(master, text="Creator: Dutch Cyber Sec")
         self.creator_label.grid(row=0, column=1, padx=10, pady=10, sticky="e")
+        
         # GUI components
         self.target_label = ttk.Label(master, text="Target:")
         self.target_label.grid(row=1, column=0, padx=10, pady=10)
@@ -53,86 +54,42 @@ class PortScannerGUI:
         self.disclaimer_label.grid(row=3, column=0, columnspan=2, padx=10, pady=10)
     
     def check_for_updates(self):
-        # Replace 'YourGitHubUsername' and 'YourGitHubRepo' with your GitHub username and repository name
-        github_username = 'DutchCyberSec'
-        github_repo = 'Advanced-Port-Scanner'
-
-        # GitHub API URL to get the latest release
-        api_url = f"https://raw.githubusercontent.com/DutchCyberSec/Advanced-Port-Scanner/main/Advanced_Port_Scanner.py"
-
-        try:
-            response = requests.get(api_url)
-            if response.status_code == 200:
-                latest_version = response.json()['tag_name']
-                current_version = '1.3'  # Replace with your actual current version
-
-                if current_version < latest_version:
-                    message = f"A new version ({latest_version}) is available. Do you want to update?"
-                    response = messagebox.askyesno("Update Available", message)
-                    if response:
-                        # Implement the update logic here
-                        self.download_new_update()
-                else:
-                    messagebox.showinfo("No Updates", "Your script is up to date.")
-            else:
-                messagebox.showerror("Error", f"Error checking for updates: {response.status_code}")
-        except Exception as e:
-            messagebox.showerror("Error", f"Error checking for updates: {str(e)}")
-
         try:
             # Directly download the updated script from GitHub raw URL
             raw_url = f"https://raw.githubusercontent.com/DutchCyberSec/Advanced-Port-Scanner/main/Advanced_Port_Scanner.py"
             response = requests.get(raw_url)
-            
+
             if response.status_code == 200:
-                updated_script_path = 'updated_tool.py'
+                try:
+                    updated_script_path = 'Advanced_Port_Scanner.py'
+                    with open(updated_script_path, 'w') as updated_script:
+                        updated_script.write(response.text)
+
+                    # Replace the current script with the updated one
+                    current_script_path = os.path.abspath(__file__)
+                    shutil.move(updated_script_path, current_script_path)
+
+                    messagebox.showinfo("Update Complete", "Script updated successfully. Restart the application.")
+                except Exception as write_error:
+                    messagebox.showerror("Error", f"Error writing updated script: {str(write_error)}")
+            else:
+                messagebox.showerror("Error", f"Error downloading update: {response.status_code}")
+        except Exception as e:
+            messagebox.showerror("Error", f"Error updating script: {str(e)}")
+
+    def download_new_update(self):
+        raw_url = f"https://raw.githubusercontent.com/DutchCyberSec/Advanced-Port-Scanner/main/Advanced_Port_Scanner.py"
+
+        try:
+            response = requests.get(raw_url)
+            if response.status_code == 200:
+                updated_script_path = 'Advanced_Port_Scanner.py'
                 with open(updated_script_path, 'w') as updated_script:
                     updated_script.write(response.text)
 
                 # Replace the current script with the updated one
                 current_script_path = os.path.abspath(__file__)
                 shutil.move(updated_script_path, current_script_path)
-
-                messagebox.showinfo("Update Complete", "Script updated successfully. Restart the application.")
-            else:
-                messagebox.showerror("Error", f"Error downloading update: {response.status_code}")
-        except Exception as e:
-            messagebox.showerror("Error", f"Error updating script: {str(e)}")
-
-
-    def download_new_update(self):
-        # Replace 'YourGitHubUsername' and 'YourGitHubRepo' with your GitHub username and repository name
-        github_username = 'DutchCyberSec'
-        github_repo = 'Advanced-Port-Scanner'
-
-        # GitHub API URL to get the latest release
-        api_url = f"https://raw.githubusercontent.com/DutchCyberSec/Advanced-Port-Scanner/main/Advanced_Port_Scanner.py"
-
-        try:
-            response = requests.get(api_url)
-            if response.status_code == 200:
-                download_url = response.json()['zipball_url']
-                download_path = 'update.zip'
-
-                # Download the zip file
-                with requests.get(download_url) as download_response:
-                    with open(download_path, 'wb') as zip_file:
-                        zip_file.write(download_response.content)
-
-                # Extract the contents
-                extract_path = 'update'
-                with zipfile.ZipFile(download_path, 'r') as zip_ref:
-                    zip_ref.extractall(extract_path)
-
-                # Copy the updated files to the script directory
-                for item in os.listdir(extract_path):
-                    source = os.path.join(extract_path, item)
-                    destination = os.path.join(os.path.dirname(os.path.realpath(__file__)), item)
-                    shutil.copy2(source, destination)
-
-                # Clean up
-                shutil.rmtree(extract_path)
-                os.remove(download_path)
 
                 messagebox.showinfo("Update Complete", "Script updated successfully. Restart the application.")
             else:
