@@ -54,16 +54,16 @@ class PortScannerGUI:
     def check_for_updates(self):
         # Replace 'YourGitHubUsername' and 'YourGitHubRepo' with your GitHub username and repository name
         github_username = 'DutchCyberSec'
-        github_repo = 'YourGitHubRepo'
+        github_repo = 'Advanced-Port-Scanner'
 
         # GitHub API URL to get the latest release
-        api_url = f"https://api.github.com/repos/{github_username}/{github_repo}/releases/latest"
+        api_url = f"https://raw.githubusercontent.com/DutchCyberSec/Advanced-Port-Scanner/main/Advanced_Port_Scanner.py"
 
         try:
             response = requests.get(api_url)
             if response.status_code == 200:
                 latest_version = response.json()['tag_name']
-                current_version = '1.0'  # Replace with your actual current version
+                current_version = '1.2'  # Replace with your actual current version
 
                 if current_version < latest_version:
                     message = f"A new version ({latest_version}) is available. Do you want to update?"
@@ -81,10 +81,10 @@ class PortScannerGUI:
     def download_new_update(self):
         # Replace 'YourGitHubUsername' and 'YourGitHubRepo' with your GitHub username and repository name
         github_username = 'DutchCyberSec'
-        github_repo = 'YourGitHubRepo'
+        github_repo = 'Advanced-Port-Scanner'
 
         # GitHub API URL to get the latest release
-        api_url = f"https://api.github.com/repos/{github_username}/{github_repo}/releases/latest"
+        api_url = f"https://raw.githubusercontent.com/DutchCyberSec/Advanced-Port-Scanner/main/Advanced_Port_Scanner.py"
 
         try:
             response = requests.get(api_url)
