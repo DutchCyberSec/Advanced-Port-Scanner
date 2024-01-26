@@ -32,3 +32,11 @@ The script uses the `requests` library. Install dependencies using:
 
 ```bash
 pip install -r requirements.txt
+
+
+
+How to Run
+
+    Clone the repository.
+    Install dependencies (pip install -r requirements.txt).
+    Run the script: Advanced_Port_Scanner.py
