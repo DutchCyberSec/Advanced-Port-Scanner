@@ -9,6 +9,10 @@ class PortScannerGUI:
         self.master = master
         master.title("Advanced Port Scanner")
 
+        # Replace 'YourGitHubUsername' and 'YourGitHubRepo' with your GitHub username and repository name
+        self.github_username = 'DutchCyberSec'
+        self.github_repo = 'Advanced-Port-Scanner'
+
         # Create menu bar
         self.menu_bar = tk.Menu(master)
         master.config(menu=self.menu_bar)
@@ -37,22 +41,30 @@ class PortScannerGUI:
 
         self.creator_label = ttk.Label(master, text="Creator: Dutch Cyber Sec")
         self.creator_label.grid(row=0, column=1, padx=10, pady=10, sticky="e")
-        
+
+        # Version label
+        self.version_label = ttk.Label(master, text=f"Version: {self.get_current_version()}")
+        self.version_label.grid(row=1, column=0, padx=10, pady=10, columnspan=2)
+
         # GUI components
         self.target_label = ttk.Label(master, text="Target:")
-        self.target_label.grid(row=1, column=0, padx=10, pady=10)
+        self.target_label.grid(row=2, column=0, padx=10, pady=10)
 
         self.target_entry = ttk.Entry(master)
-        self.target_entry.grid(row=1, column=1, padx=10, pady=10)
+        self.target_entry.grid(row=2, column=1, padx=10, pady=10)
 
         self.result_text = tk.Text(master, height=10, width=50)
-        self.result_text.grid(row=2, column=0, columnspan=2, padx=10, pady=10)
+        self.result_text.grid(row=3, column=0, columnspan=2, padx=10, pady=10)
 
         # Disclaimer label
         disclaimer_text = "This tool is for educational purposes only. Use it responsibly and with proper authorization."
         self.disclaimer_label = ttk.Label(master, text=disclaimer_text, font=('Helvetica', 8), foreground='red')
-        self.disclaimer_label.grid(row=3, column=0, columnspan=2, padx=10, pady=10)
+        self.disclaimer_label.grid(row=4, column=0, columnspan=2, padx=10, pady=10)
     
+    def get_current_version(self):
+        # You can implement your version retrieval logic here
+        return "1.0"
+
     def check_for_updates(self):
         try:
             # Directly download the updated script from GitHub raw URL
@@ -70,6 +82,7 @@ class PortScannerGUI:
                     shutil.move(updated_script_path, current_script_path)
 
                     messagebox.showinfo("Update Complete", "Script updated successfully. Restart the application.")
+                    self.version_label.config(text=f"Version: {self.get_current_version()}")
                 except Exception as write_error:
                     messagebox.showerror("Error", f"Error writing updated script: {str(write_error)}")
             else:
@@ -78,12 +91,17 @@ class PortScannerGUI:
             messagebox.showerror("Error", f"Error updating script: {str(e)}")
 
     def download_new_update(self):
-        raw_url = f"https://raw.githubusercontent.com/DutchCyberSec/Advanced-Port-Scanner/main/Advanced_Port_Scanner.py"
+        # Replace 'YourGitHubUsername' and 'YourGitHubRepo' with your GitHub username and repository name
+        github_username = 'DutchCyberSec'
+        github_repo = 'Advanced-Port-Scanner'
+
+        # GitHub API URL to get the latest release
+        api_url = f"https://raw.githubusercontent.com/DutchCyberSec/Advanced-Port-Scanner/main/Advanced_Port_Scanner.py"
 
         try:
-            response = requests.get(raw_url)
+            response = requests.get(api_url)
             if response.status_code == 200:
-                updated_script_path = 'Advanced_Port_Scanner.py'
+                updated_script_path = 'Advanced_Port_Scanner'
                 with open(updated_script_path, 'w') as updated_script:
                     updated_script.write(response.text)
 
@@ -92,6 +110,7 @@ class PortScannerGUI:
                 shutil.move(updated_script_path, current_script_path)
 
                 messagebox.showinfo("Update Complete", "Script updated successfully. Restart the application.")
+                self.version_label.config(text=f"Version: {self.get_current_version()}")
             else:
                 messagebox.showerror("Error", f"Error downloading update: {response.status_code}")
         except Exception as e:
