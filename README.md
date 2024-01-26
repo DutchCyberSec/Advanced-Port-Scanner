@@ -37,6 +37,6 @@ pip install -r requirements.txt
 
 How to Run
 
-    Clone the repository.
+    Clone the repository. pip clone https://github.com/DutchCyberSec/Advanced-Port-Scanner.git
     Install dependencies (pip install -r requirements.txt).
     Run the script: sudo python3 ./Advanced_Port_Scanner.py
